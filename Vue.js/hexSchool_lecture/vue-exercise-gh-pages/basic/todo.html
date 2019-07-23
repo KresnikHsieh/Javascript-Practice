@@ -150,9 +150,9 @@
     <div class="input-group-prepend">
       <span class="input-group-text" id="basic-addon1">待辦事項</span>
     </div>
-    <input type="text" class="form-control" placeholder="準備要做的任務">
+    <input type="text" class="form-control" placeholder="準備要做的任務" v-model="newTodo" @keyup.enter="addTodo">
     <div class="input-group-append">
-      <button class="btn btn-primary" type="button">新增</button>
+      <button class="btn btn-primary" type="button" @click="addTodo">新增</button>
     </div>
   </div>
   <div class="card text-center">
@@ -170,12 +170,12 @@
       </ul>
     </div>
     <ul class="list-group list-group-flush text-left">
-      <li class="list-group-item">
+      <li class="list-group-item" v-for="item in todos">
         <div class="d-flex">
           <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="a1">
-            <label class="form-check-label" for="a1">
-              Cras justo odio
+            <input type="checkbox" class="form-check-input" :id="item.id" v-model="item.completed">
+            <label class="form-check-label" :for="item.id">
+              {{item.title}}
             </label>
           </div>
           <button type="button" class="close ml-auto" aria-label="Close">
@@ -183,7 +183,7 @@
           </button>
         </div>
       </li>
-      <li class="list-group-item">
+      <!-- <li class="list-group-item">
         <div class="d-flex">
           <div class="form-check">
             <input type="checkbox" class="form-check-input" id="a1">
@@ -195,7 +195,7 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-      </li>
+      </li> -->
       <li class="list-group-item">
         <input type="text" class="form-control">
       </li>
@@ -210,7 +210,29 @@
 <script>
 var app = new Vue({
   el: '#app',
-  data: {},
+  data: {
+    newTodo:'',
+    todos:[
+      {
+        id:'01234',
+        title:'hello',
+        completed: false,
+      }
+    ],
+  },
+  methods: {
+    addTodo: function(){
+      var value = this.newTodo; //存下newTodo所輸入的內容(文字)
+      var timestamp = Math.floor(Date.now());//取得隨機的id，使用var timestamp = Date.now()取得現在時間，並以Math.floor()將其轉成正整數
+      console.log(value,timestamp);
+      this.todos.push({ //
+        id: timestamp,
+        title: value,
+        completed:false,
+      });
+      this.newTodo='';
+    }
+  },
 });
 </script>
 
