@@ -9,7 +9,10 @@
     <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/solid.js" integrity="sha384-+Ga2s7YBbhOD6nie0DzrZpJes+b2K1xkpKxTFFcx59QmVPaSA8c7pycsNaFwUK6l" crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/regular.js" integrity="sha384-t7yHmUlwFrLxHXNLstawVRBMeSLcXTbQ5hsd0ifzwGtN7ZF7RZ8ppM7Ldinuoiif" crossorigin="anonymous"></script>
     <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/fontawesome.js" integrity="sha384-7ox8Q2yzO/uWircfojVuCQOZl+ZZBg2D2J5nkpLqzH1HY0C1dHlTKIbpRz/LG23c" crossorigin="anonymous"></script>    <script src="/javascripts/vendor.js"></script>
-
+    <script
+  src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+  integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8="
+  crossorigin="anonymous"></script>
   </head>
   
   <body class="bg-lighter">
@@ -102,6 +105,8 @@
   </ol>
 </div>
 
+<div id='app'></div>
+
 
 <script>
 // #1 樣板字串
@@ -128,6 +133,29 @@ let originUl = '<ul>\
 </ul>';
 
 console.log(originString, originUl);
+
+let newString = `我叫做${people[0].name}`;
+console.log(newString);
+
+let newUl = `
+  <ul>
+    <li>我叫做 ${people[0].name}</li>
+    <li>我叫做 ${people[1].name}</li>
+    <li>我叫做 ${people[2].name}</li>
+  </ul>
+`
+console.log(newUl);
+
+let newUl2 =`
+  <ul>
+    ${people.map(person =>  `<li>我叫做${person.name}</li>`).join('')} 
+  </ul>
+`
+console.log(newUl2);
+//people.map()會將people物件做迴圈處理，並將處理的值回傳至template String上，最終成為一陣列
+//使用join('')改變陣列連結的符號，此為空格
+
+$('#app').html(newUl2);
 
 </script> 
         </div>

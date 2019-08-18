@@ -107,17 +107,24 @@
 // #1 陣列解構
 // 1. 請將 family 的值，一一賦予到變數上
 // 2. 請將後面三個名字賦予到另一個陣列上
-// let family = ['小明', '杰倫', '阿姨', '老媽', '老爸'];
+let family = ['小明', '杰倫', '阿姨', '老媽', '老爸'];
 // let ming = family[0];
 // let jay = family[1];
 // let auntie = family[2];
 
+let [ming,jay,,mom,day]= family; //解構賦值可以跳過其中一個值
+console.log(ming,jay,mom,day);
+
 // #2 請交換以下兩個變數
-// let Goku = '悟空';
-// let Ginyu = '基紐';
+let Goku = '悟空';
+let Ginyu = '基紐';
+[Ginyu,Goku] = [Goku,Ginyu]; //可以直接交換兩個變數的值
+console.log(Goku,Ginyu);
 
 // #3 請拆解以下字元到單一變數上
-// let str = '基紐特攻隊';
+let str = '基紐特攻隊';
+let [ q,a,z,w,s] = str;
+console.log(q,a,z,w,s);
 
 // #4 物件解構
 // 請取出物件內的兩個值到單一變數上

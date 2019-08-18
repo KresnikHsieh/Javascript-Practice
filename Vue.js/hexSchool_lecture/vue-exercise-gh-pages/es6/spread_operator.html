@@ -105,12 +105,18 @@
 
 <script>
 // #1 使用展開語法，合併以下陣列
-let groupA = ['小明', '杰倫', '阿姨'];
-let groupB = ['老媽', '老爸'];
+// let groupA = ['小明', '杰倫', '阿姨'];
+// let groupB = ['老媽', '老爸'];
+// // let groupAll = groupA.concat(groupB); //傳統寫法
+// let groupAll = [...groupA, ...groupB];
+
+
+
 
 // #2 淺複製觀念說明 (shallow copy)
 // let groupA = ['小明', '杰倫', '阿姨'];
-// let groupB = groupA;
+// // let groupB = groupA; //此會讓groupA的值等於groupB中的值，因為[]中傳的是參考
+// let groupB = [...groupA]; //使用展開建立一“新陣列”，僅是將groupA的值展開並取出然後建立的新陣列，並非將參考加入groupA中
 // groupB.push('阿明');
 // console.log(groupA); // 請問此時的 groupA 值為何
 

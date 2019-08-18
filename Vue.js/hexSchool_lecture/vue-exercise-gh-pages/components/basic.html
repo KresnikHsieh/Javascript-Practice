@@ -128,16 +128,40 @@
     <thead>
     </thead>
     <tbody>
-      <tr v-for="(item, key) in data" :item="item" :key="key">
+      <!-- <row-component v-for="(item, key) in data" :person="item" :key="key"></row-component> -->
+      <tr is="row-component" v-for="(item, key) in data" :person="item" :key="key"></tr>
+      <!-- 使用is將component維持在<tbody><tr><td></td></tr></tbody>之結構中 -->
+      <!-- <tr v-for="(item, key) in data" :item="item" :key="key">
         <td>{{ item.name }}</td>
         <td>{{ item.cash }}</td>
         <td>{{ item.icash }}</td>
-      </tr>
+      </tr> -->
     </tbody>
   </table>
 </div>
 
+<script type="text/x-template" id="rowComponentTemplate">
+  <!-- 建立新的<script></script>並將id指向x-template -->
+  <tr>
+    <td>{{ person.name }}</td> 
+    <!-- 將item替換為person -->
+    <td>{{ person.cash }}</td>
+    <td>{{ person.icash }}</td>
+  </tr>
+</script>
+
 <script>
+
+// Vue.component('row-component',{
+//   props: ['person'], //元件內的item與元件外的為不同定義，必須使用props將資料傳出去
+//   template: '#rowComponentTemplate',
+// })
+
+var child = { 
+  props: ['person'], //元件內的item與元件外的為不同定義，必須使用props將資料傳出去
+  template: '#rowComponentTemplate',
+}
+
 var app = new Vue({
   el: '#app',
   data: {
@@ -163,7 +187,10 @@ var app = new Vue({
         icash: 100,
       },
     ]
-  }
+  },
+  components: { 
+    "row-component": child, //將child註冊到vue（局部註冊）
+  },
 });
 </script>
 

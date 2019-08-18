@@ -159,29 +159,36 @@
     <div class="card-header">
       <ul class="nav nav-tabs card-header-tabs">
         <li class="nav-item">
-          <a class="nav-link active" href="#">全部</a>
+          <a class="nav-link" :class="{'active': visibility == 'all'}" @click="visibility = 'all'" href="#">全部</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link " href="#">進行中</a>
+          <a class="nav-link" :class="{'active': visibility == 'active'}" @click="visibility = 'active'" href="#">進行中</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">已完成</a>
+          <a class="nav-link" :class="{'active': visibility == 'completed'}" @click="visibility = 'completed'" href="#">已完成</a>
         </li>
       </ul>
     </div>
     <ul class="list-group list-group-flush text-left">
-      <li class="list-group-item" v-for="item in todos">
-        <div class="d-flex">
+      <li class="list-group-item" v-for="(item, key) in filteredTodos" @dblclick="editTodo(item)"> <!--key為陣列的索引 @dblclick為雙擊事件-->
+        <div class="d-flex" v-if="item.id !== cacaheTodo.id"> <!--當item.id不等於cacaheTodo.id時顯示-->
           <div class="form-check">
             <input type="checkbox" class="form-check-input" :id="item.id" v-model="item.completed">
-            <label class="form-check-label" :for="item.id">
+            <label class="form-check-label" 
+              :class="{'completed':item.completed}"
+              :for="item.id">
               {{item.title}}
             </label>
           </div>
-          <button type="button" class="close ml-auto" aria-label="Close">
+          <button type="button" class="close ml-auto" aria-label="Close" @click="removeTodo(item)">
             <span aria-hidden="true">&times;</span>
-          </button>
+          </button>  
         </div>
+        <input type="text" class="form-control" 
+        v-model="cacheTitle"
+        @keyup.enter="doneEdit(item)"
+        @keyup.esc="cancelEdit()"
+        v-if="item.id === cacaheTodo.id"> <!--當item.id等於cacaheTodo.id時顯示--> <!--按下enter時完成編輯/按下esc時觸發cancelEdit() -->
       </li>
       <!-- <li class="list-group-item">
         <div class="d-flex">
@@ -196,12 +203,12 @@
           </button>
         </div>
       </li> -->
-      <li class="list-group-item">
+      <!-- <li class="list-group-item">
         <input type="text" class="form-control">
-      </li>
+      </li> -->
     </ul>
     <div class="card-footer d-flex justify-content-between">
-      <span>還有 3 筆任務未完成</span>
+      <span>還有 {{remainTodosNum}} 筆任務未完成</span>
       <a href="#">清除所有任務</a>
     </div>
   </div>
@@ -215,24 +222,123 @@ var app = new Vue({
     todos:[
       {
         id:'01234',
-        title:'hello',
+        title:'I am Iron Man✌️',
         completed: false,
       }
     ],
+    visibility:'all',
+    cacaheTodo:{}, // 編輯預存的待辦事項
+    cacheTitle:'', // 編輯預存的待辦標題
+    remainTodosNum: 0, 
   },
+  
   methods: {
     addTodo: function(){
-      var value = this.newTodo; //存下newTodo所輸入的內容(文字)
+      var value = this.newTodo.trim(); //存下newTodo所輸入的內容(文字)，使用trim()刪除多餘的空格
       var timestamp = Math.floor(Date.now());//取得隨機的id，使用var timestamp = Date.now()取得現在時間，並以Math.floor()將其轉成正整數
       console.log(value,timestamp);
+
+      if(!value){
+        return;
+      }
+
       this.todos.push({ //
         id: timestamp,
         title: value,
         completed:false,
       });
       this.newTodo='';
+    },
+
+    removeTodo: function(todo){
+      // var newIndex = '';
+      // var vm = this; 
+      // vm.todos.forEach(function(item,key){
+      //   if (todo.id === item.id) { 
+      //     newIndex = key;
+      //   }
+      // }) 
+      // 以上可精簡為下列段落
+      var vm = this;
+      var newIndex = vm.todos.find(function(item,key){ //
+        return todo.id === item.id;
+      });
+
+      this.todos.splice(key,1);//刪除位於key索引的1筆資料
+      
+    },
+
+    editTodo: function(item){
+      console.log(item);
+      this.cacaheTodo = item; //將雙擊當下的todo存入cacheTodo
+      this.cacheTitle = item.title; //將雙擊當下的todo之Title存入cacheTitle
+    },
+    
+    cancelEdit: function(){
+      this.cacaheTodo = {}; //將預存的cacehTodo設為空陣列＝取消編輯
+    },
+
+    doneEdit: function(item){
+      item.title = this.cacheTitle; //將輸入的item.title存入cacheTitle
+      this.cacheTitle = ''; //將cacheTitle清空
+      this.cacaheTodo = {}; //將cacehTodo清空
+    },
+
+    },
+
+  computed: {
+    filteredTodos: function(){
+    
+      // this.todos.forEach(function(item){
+      //   var newTodos = [];
+      //     if(!item.completed){
+      //       newTodos.push(item);
+      //       var remainTodosNum = newTodos.length;
+      //       console.log(remainTodosNum);
+      //     }
+      //   })
+      
+
+      if(this.visibility == 'all'){
+        var newTodos = [];
+        this.todos.forEach(function(item){
+          if(!item.completed){
+            newTodos.push(item);
+            var remainTodosNum = newTodos.length;
+            console.log(remainTodosNum);
+            console.log(`there remains ${remainTodosNum} todos` );
+            return remainTodosNum;
+          }
+        })
+        
+        return this.todos;
+
+      }else if(this.visibility == 'active'){ //過濾進行中的todos
+        var newTodos = []; //建立一空陣列接收尚未完成的todos
+        this.todos.forEach(function(item){
+          if(!item.completed){
+            newTodos.push(item);
+          }
+        })
+        return newTodos;
+      }else if(this.visibility == 'completed'){ //過濾已完成的todos
+        var newTodos = []; //建立一空陣列接收已完成的todos
+        this.todos.forEach(function(item){
+          if(item.completed){
+            newTodos.push(item);
+          }
+        })
+        return newTodos;
+      }else if(this.visibility == 'completed'||this.visibility == 'active'||this.visibility == 'all'){
+        
+      }
+    
+      return [];
     }
-  },
+
+    
+  }
+
 });
 </script>
 

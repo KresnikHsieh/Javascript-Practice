@@ -176,10 +176,10 @@ const Child = {
   beforeCreate() {
     console.log(`beforeCreate! ${this.text}`);
   }, 
-  created() {
+  created() { //可以開始操作AJAX
     alert(`created! ${this.text}`);
   }, 
-  beforeMount() {
+  beforeMount() { //準備開始繪製元件
     alert(`beforeMount! ${this.text}`);
   }, 
   mounted() {

@@ -134,8 +134,12 @@
 
 <script>
 Vue.component('counter-component', {
-  data: {
-    counter: 0
+  // data: {
+  //   counter: 0
+  // },
+  data: function(){
+    // 在component中必須使用function-return來回傳data的值
+    return {counter: 0}
   },
   template: '#counter-component'
 })

@@ -127,10 +127,8 @@
 
 <script>
 // extend 是基礎建構的概念
-// var newExtend = Vue.extend()
-
-var childOne = {
-  props: ['item'],
+var newExtend = Vue.extend({
+  //將childOne的內容直接貼到Vue.extend()中
   data: function() {
     return {
       data: {},
@@ -151,30 +149,67 @@ var childOne = {
   mounted: function() {
     console.log('Extend:', this)
   }
+})
+
+var childOne = {
+  props: ['item'],
+  extends: newExtend, //將newextend為基底延伸使用
+
+  // data: function() {
+  //   return {
+  //     data: {},
+  //     extendData: '這段文字是 extend 得到'
+  //   }
+  // },
+  // template: '#row-component',
+  // filters: {
+  //   dollarSign: function (n) {
+  //     return `$ ${n}`
+  //   },
+  //   currency: function(n) {
+  //     return n.toFixed(2).replace(/./g, function(c, i, a) {
+  //         return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+  //     });
+  //   }
+  // },
+  // mounted: function() {
+  //   console.log('Extend:', this)
+  // }
+
 }
 
 var childTwo = {
   props: ['item'],
-  data: function() {
-    return {
-      data: {},
-      extendData: '這段文字是 extend 得到'
-    }
-  },
   template: '#row-component-two',
-  filters: {
-    dollarSign: function (n) {
-      return `$ ${n}`
-    },
-    currency: function(n) {
-      return n.toFixed(2).replace(/./g, function(c, i, a) {
-          return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
-      });
-    }
+  extends: newExtend, // 加入extends延伸newExtends
+  data:function(){
+    return {child2:'元件2'}
   },
-  mounted: function() {
-    console.log('Extend:', this)
-  }
+  //如果是extends的元件，執行時除了生成原本的data外，亦會生成新加入的data內容
+  mounted: function(){
+    console.log("childTwo新加入的生命週期mouted")
+  },
+  //如果是extends的元件，執行時除了執行原來的生命週期外，亦會執行新加入的生命週期內容
+
+  // data: function() {
+  //   return {
+  //     data: {},
+  //     extendData: '這段文字是 extend 得到'
+  //   }
+  // },
+  // filters: {
+  //   dollarSign: function (n) {
+  //     return `$ ${n}`
+  //   },
+  //   currency: function(n) {
+  //     return n.toFixed(2).replace(/./g, function(c, i, a) {
+  //         return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+  //     });
+  //   }
+  // },
+  // mounted: function() {
+  //   console.log('Extend:', this)
+  // }
 }
 
 var app = new Vue({

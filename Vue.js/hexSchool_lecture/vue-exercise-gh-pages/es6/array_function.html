@@ -119,33 +119,85 @@ const people = [
     name: '杰倫',
     money: 60000
   },
-  {
-    name: '老媽',
-    money: Infinity
-  }
+  // {
+  //   name: '老媽',
+  //   money: Infinity
+  // }
 ];
 
 // forEach 與 map
 // 將所有物件增加 icash 有多少金額的欄位
 
+// for(let i =0; i<people.length; i++){
+//   console.log(people[i]);
+// }
+
+// people.forEach(function(item, index, array){
+//   // console.log(item, index, array);
+//   item.icash = item.money +500;
+//   console.log(item);
+// });
+
+const newPeople = people.map(function(item, index, array){
+  return { //如果沒有return，還是會回傳陣列，但會是undefined
+    ...item,
+    icash: item.money+500
+  }
+});
+console.log(newPeople);
+
 
 // filter
 // 挑出金額少於 5000 的物件
+// const filterPeople = people.filter(function(item, index){
+//   if(item.money < 5000){
+//     return true;
+//   }
+// })
+// console.log(filterPeople);
 
 // find
+// find只會回傳一次
 // 1. 找到金額 = 500 的物件
 // 2. 找到 > 5000 的物件
+// const findPeople = people.find(function(item, index){
+//   if(item.money == 500){
+//     return true;
+//   }
+// })
+// console.log(findPeople);
 
 // every
+// 所有結果皆為true時，return才會是true
 // 1. 所有物件是否都超過 10000 元
 // 2. 是否所有物件超過 300 元
+const ans = people.every(function(item,i){
+  // return item.money >10000;
+  return item.money >300;
+})
+
+console.log(ans);
 
 // some
+// 只要有部分(有true)為true，return就會是true
 // 1. 是否有物件超過 10000 元
 // 2. 是否有物件持有金額少於 300元
 
 // reduce
 // 去除掉老媽，請問剩下的人有多少錢？
+// const newNumber = people.reduce(function(prev, item , index){
+//   console.log(prev);
+//   return prev + item.money;
+// },0)
+
+// console.log(newNumber);
+
+const newNumber2 = people.reduce(function(prev, item , index){
+  console.log(prev);
+  return Math.max(prev, item.money); //使用Math.max比大小
+},0)
+
+console.log('newNumber2 最大者為',newNumber2);
 
 </script> 
         </div>

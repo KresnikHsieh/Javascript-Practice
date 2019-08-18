@@ -102,18 +102,29 @@
       <tr is="row-component" v-for="(item, key) in data" :item="item" :key="key"></tr>
     </tbody>
   </table>
-  {{ data[1].cash }}
+  {{ data[1].cash | currency | dollarSign }}
 </div>
 
 <script type="text/x-template" id="row-component">
   <tr>
     <td>{{ item.name }}</td>
-    <td>{{ item.cash }}</td>
-    <td>{{ item.icash }}</td>
+    <td>{{ item.cash | currency | dollarSign}}</td>
+    <td>{{ item.icash | currency | dollarSign}}</td>
+    
   </tr>
 </script>
 
 <script>
+//撰寫全域的filter -> Vue.filter() 注意沒有s
+Vue.filter('dollarSign', function(n) {
+  return `$ ${n}`
+});
+Vue.filter('currency', function(n) {
+  return n.toFixed(2).replace(/./g, function(c, i, a) {
+    return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+  });
+});
+
 var child = {
   props: ['item'],
   template: '#row-component',
@@ -122,6 +133,17 @@ var child = {
       data: {}
     }
   },
+  // filters: {
+  //   dollarSign:function(n){
+  //     //此處的n為currency與item.icash處理後的參數
+  //     return `$ ${n}`;
+
+  //   },
+  //   currency:function(n){
+  //       return n.toFixed(2).replace(/./g, function(c, i, a) {
+  //       return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
+  //     });
+  // }},
   mounted: function() {
     console.log('Component:', this)
   }
@@ -162,16 +184,8 @@ var app = new Vue({
 });
 </script>
 
-<!-- 
-Vue.filter('dollarSign', function(n) {
-  return `$ ${n}`
-});
-Vue.filter('currency', function(n) {
-  return n.toFixed(2).replace(/./g, function(c, i, a) {
-    return i && c !== "." && ((a.length - i) % 3 === 0) ? ',' + c : c;
-  });
-});
---> 
+
+
         </div>
       </div>
     </div>

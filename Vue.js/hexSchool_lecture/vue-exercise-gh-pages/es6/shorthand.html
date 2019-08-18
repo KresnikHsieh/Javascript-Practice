@@ -105,15 +105,21 @@
 
 <script>
 // #1 物件縮寫
-// 請將以下兩個合併至一個物件上
-const Frieza = '弗利沙'
-const GinyuTeam = {
-  Ginyu: '基紐',
-  Jeice: '吉斯',
-  burter: '巴特',
-  // ...
-}
+//當變數的值與物件屬性相同時，只要寫值/屬性其中一個就好
 
+// 請將以下兩個合併至一個物件上
+// const Frieza = '弗利沙'
+// const GinyuTeam = {
+//   Ginyu: '基紐',
+//   Jeice: '吉斯',
+//   burter: '巴特',
+//   // ...
+// }
+// const newTeam = {
+//   GinyuTeam,
+//   Frieza,
+// }
+// console.log(newTeam);
 
 // #2 案例
 // 在 Vue.js CLI 常見情境
@@ -123,7 +129,7 @@ const GinyuTeam = {
 // // 將套件由 './App' 路徑載入，並使用 App 這個變數名稱
 // new Vue({
 //   el: '#app',
-//   router,
+//   router, //等同於 router: router,
 //   template: '<App/>',
 //   components: { App }
 // });
@@ -132,12 +138,16 @@ const GinyuTeam = {
 
 // # 物件函式縮寫
 // 縮寫以下 showPosture Function
-// const newTeam = {
-//   // ...
-//   showPosture: function () {
-//     console.log('我們是 基紐特戰隊')
-//   }
-// }
+const newTeam = {
+  // ...
+  showPosture (){
+    console.log('我們是 基紐特戰隊')
+  }
+  // 等同於下列
+  // showPosture: function () {
+  //   console.log('我們是 基紐特戰隊')
+  // }
+}
 
 // # 搭配解構使用
 // 將以下物件指向賦予到另一個物件上，並且避免參考
@@ -153,6 +163,11 @@ const GinyuTeam = {
 //   },
 //   // ...
 // }
+
+// const newTeam = {
+//   ...GinyuTeam,
+// }
+//使用解構賦值，將新陣列的結構與原陣列相同，同時不影響原陣列的結構與值
 
 </script> 
         </div>

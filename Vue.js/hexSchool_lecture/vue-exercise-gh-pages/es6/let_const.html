@@ -110,9 +110,17 @@ var mom = '老媽';
 (function () {
   console.log(mom);
 })();
+//undefined 已經準備記憶體
+//not define 尚未準備記憶體
+
+
 
 // #2
 // 修改 var -> let
+// var 的作用域為funciton scope
+// let 的作用域為block內
+
+
 // function varMing () {
 //   var ming = '小明';
 //   if (true) {
@@ -124,18 +132,15 @@ var mom = '老媽';
 
 
 // #3
-// 修改 var -> let
-// for (var i = 0; i < 10; i++) {
-//   console.log(i);
-//   setTimeout(function () {
-//     console.log('這執行第' + i + '次');
-//   }, 10);
-// }
+// 修改 var -> letˇ
+for (var i = 0; i < 10; i++) { //使用var時i 為全域變數
+  console.log(i);
+  setTimeout(function () {
+    console.log('這執行第' + i + '次');
+  }, 10);
+}
 
 // #4
-// const
-// const ming = '鐵錚錚男子漢';
-
 // #5
 // const 與 物件
 // const family = {
@@ -144,6 +149,12 @@ var mom = '老媽';
 //   sister: '小橙'
 // };
 // family.father = '爸爸';
+
+// const是不能被改變值
+// const ming = '鐵錚錚男子漢';
+// 但{}物件中的內容可以被改變 因為物件為傳參考
+// 但family = {}; 則不能被執行
+
 
 // #6
 // 額外問題，不使用 let，上述答案如何解答
