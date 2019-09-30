@@ -8,6 +8,6 @@
 $(document).ready(function(){
  console.log("Hello World");
  $(".btn_try").click(function(event) {
- 	alert("你好");
+ 	$(".title").addClass("bounceInLeft");
  });
 })

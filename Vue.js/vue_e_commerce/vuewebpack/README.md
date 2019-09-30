@@ -1,6 +1,6 @@
-# vue_test
+# e-commerce
 
-> A vue practice project
+> A Vue.js project
 
 ## Build Setup
 

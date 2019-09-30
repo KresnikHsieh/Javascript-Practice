@@ -104,13 +104,16 @@
 // 官方文件 https://cn.vuejs.org/v2/guide/custom-directive.html
 Vue.directive('focus', {
   inserted: function(el) {
+    //聚焦元素
     el.focus()
   }
 })
 
 Vue.directive('validator', {
   update: function(el, binding, vnode) {
+    // el在此例子中為<input></input>
     console.log('update', el.value, el.className, vnode);
+
 
     // 尋找當前的 model 名稱
     var currentModel = vnode.data.directives.find(function(o) {
@@ -121,8 +124,9 @@ Vue.directive('validator', {
     var value = vnode.context[currentModel];
 
     // Email validate
+    // 使用正規式驗證email格式
     var re = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    if (!re.test(value)) {
+    if (!re.test(value)) { //當格式不符合email時
       el.className = 'form-control is-invalid'
     } else {
       el.className = 'form-control is-valid'

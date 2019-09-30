@@ -1,5 +1,7 @@
 <template>
   <div class="hello">
+    <a href="#" @click.prevent="signout">登出</a> 
+    <!-- 建立登出按鈕 -->
     <h1>{{ msg }}</h1>
     <h2>Essential Links</h2>
     <ul>
@@ -90,7 +92,19 @@ export default {
     return {
       msg: 'Welcome to Your Vue.js App'
     }
-  }
+  },
+  methods:{
+    signout(){ //登出事件
+      const api = `${process.env.APIPATH}/logout`; //建立signout api的變數
+        const vm = this;
+        this.$http.post(api).then((response) => { //使用post傳入api即可
+            console.log(response.data);
+            if(response.data.success){
+                vm.$router.push('/login'); // 如果登出成功，則將路徑指向登入頁面
+            }
+        });
+    },
+  },
 }
 </script>
 
