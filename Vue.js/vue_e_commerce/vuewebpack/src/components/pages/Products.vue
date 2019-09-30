@@ -1,5 +1,7 @@
 <template>
     <div>
+      <loading :active.sync="isLoading"></loading> 
+      <!-- 加入loading-overlay效果 -->
         <div class="text-right mt-4">
           <button class="btn-primary" @click="openModal(true)">建立新的產品</button> 
           <!-- openModal(isNew)以判斷開啟哪個Modal -->
@@ -61,7 +63,8 @@
                     </div>
                     <div class="form-group">
                       <label for="customFile">或 上傳圖片
-                          <i class="fas fa-spinner fa-spin"></i>
+                          <i class="fas fa-spinner fa-spin" v-if="status.fileUploading"></i>
+                          <!-- 綁定fileUploading讀取效果 -->
                       </label>
                       <input type="file" id="customFile" class="form-control" @change="uploadFile()" ref="files">
                     </div>
@@ -156,8 +159,8 @@ export default {
           products:[], //return的內容為一陣列
           tempProduct:{},
           isNew : false,
-          isLoading: false,
-          status: {
+          isLoading: false, //loading-overlay預設為關閉
+          status: { //定義font-awesome的上傳狀態
             fileUploading: false,
           },
       };
@@ -166,8 +169,10 @@ export default {
       getProducts(){
         const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/products`; //建立api的變數
         const vm = this;
+        vm.isLoading = true; //啟動getProducts時啟用isLoading效果
         this.$http.get(api).then((response) => {
         console.log(response.data);
+        vm.isLoading = false; //關閉getProducts時關閉isLoading效果
         vm.products = response.data.products;
         });
       },
@@ -225,16 +230,19 @@ export default {
         formData.append('file-to-upload', uploadedFile); //使用.append()新增欄位'file-to-upload'
         // formData的document: https://developer.mozilla.org/en-US/docs/Web/API/FormData/FormData
         const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/admin/upload`; //定義上傳路徑
+        vm.status.fileUploading = true; //啟動uploadFile()的AJAX時啟用讀取效果
         this.$http.post(url,formData,{
           headers:{
             'Content-Type': 'multipart/form-data', //符合formData格式
           },
         }).then((response) => {
           console.log(response.data);
+          vm.status.fileUploading = false; //結束uploadFile()的AJAX時關閉讀取效果
           if(response.data.success){ //當成功傳遞圖片資料時
             // vm.tempProduct.imageUrl = response.data.imageUrl;
             // console.log(vm.tempProduct); //此寫法不包含vue的getter與setter故改為下列寫法
             vm.$set(vm.tempProduct, 'imageUrl', response.data.imageUrl);
+            
           }
         });
       },
