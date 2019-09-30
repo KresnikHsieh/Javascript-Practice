@@ -20,10 +20,10 @@
               <td>{{item.category}}</td>
               <td>{{item.title}}</td>
               <td class="text-right">
-                {{item.origin_price}}
+                {{item.origin_price | currency}} 
               </td>
               <td class="text-right">
-                {{item.price}}
+                {{item.price | currency}}
               </td>
               <td class="text-right">
                 <span v-if="item.is_enable" class="text-success">啟用</span>
@@ -39,6 +39,27 @@
             </tr>
           </tbody>
         </table>
+
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Previous" :class="{'disabled': !pagination.has_pre}" @click.prevent="getProducts(pagination.current_page - 1)"> 
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+              </a>
+            </li>
+            <li class="page-item" v-for="page in pagination.total_pages" :key="page"
+            :class="{'active':pagination.current_page === page}">
+              <a class="page-link" href="#" @click.prevent="getProducts(page)">{{page}}</a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Next" :class="{'disabled': !pagination.has_next}" @click.prevent="getProducts(pagination.current_page + 1)">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
 
         <!-- <Pagination :pages="pagination" @emitPages="getProducts"></Pagination> -->
 
@@ -157,6 +178,7 @@ export default {
     data(){
       return {
           products:[], //return的內容為一陣列
+          pagination:[], //新增分頁
           tempProduct:{},
           isNew : false,
           isLoading: false, //loading-overlay預設為關閉
@@ -166,14 +188,15 @@ export default {
       };
     },
     methods:{
-      getProducts(){
-        const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/products`; //建立api的變數
+      getProducts(page = 1){ //ES6: page的預設值為1
+        const api = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/products?page=${page}`; //建立api的變數
         const vm = this;
         vm.isLoading = true; //啟動getProducts時啟用isLoading效果
         this.$http.get(api).then((response) => {
         console.log(response.data);
         vm.isLoading = false; //關閉getProducts時關閉isLoading效果
         vm.products = response.data.products;
+        vm.pagination = response.data.pagination;
         });
       },
       openModal(isNew,item){ //可傳入是否為新（isNew）跟項目(item)參數 
@@ -241,14 +264,16 @@ export default {
           if(response.data.success){ //當成功傳遞圖片資料時
             // vm.tempProduct.imageUrl = response.data.imageUrl;
             // console.log(vm.tempProduct); //此寫法不包含vue的getter與setter故改為下列寫法
-            vm.$set(vm.tempProduct, 'imageUrl', response.data.imageUrl);
-            
+            vm.$set(vm.tempProduct, 'imageUrl', response.data.imageUrl); 
+          }else{
+            this.$bus.$emit('message:push', response.data.message, 'danger');
           }
         });
       },
     },
     created(){ //建立creted hook 啟動getProducts();
       this.getProducts();
+      // this.$bus.$emit('message:push','這裡是訊息','success'); //將訊息方法emit出去，格式為(方法,訊息,BS樣式)
     },
 }
 </script>
