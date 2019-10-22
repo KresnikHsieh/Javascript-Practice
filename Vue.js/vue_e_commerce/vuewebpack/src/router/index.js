@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import Dashboard from '@/components/Dashboard';
 import Login from '@/components/pages/Login';
 import Products from '@/components/pages/Products';
+import CustomerOrder from '@/components/pages/CustomerOrders';
 
 Vue.use(Router)
 
@@ -36,6 +37,18 @@ export default new Router({
       path: '/login',
       name: 'Login',
       component: Login,
-    }
+    },
+    {
+      path: '/',
+      name: 'Dashboard',
+      component: Dashboard,
+      children: [ 
+        { //建立巢狀的router-view
+          path: 'customer_order',
+          name: 'CustomerOrder',
+          component: CustomerOrder,
+        },
+      ],
+    },
   ]
 })

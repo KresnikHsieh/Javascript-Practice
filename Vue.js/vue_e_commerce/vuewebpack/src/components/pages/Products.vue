@@ -193,10 +193,12 @@ export default {
         const vm = this;
         vm.isLoading = true; //啟動getProducts時啟用isLoading效果
         this.$http.get(api).then((response) => {
-        console.log(response.data);
-        vm.isLoading = false; //關閉getProducts時關閉isLoading效果
-        vm.products = response.data.products;
-        vm.pagination = response.data.pagination;
+          console.log("getProducts:"+response.data);
+          // if(response.data.success){
+            vm.isLoading = false; //關閉getProducts時關閉isLoading效果
+            vm.products = response.data.products;
+            vm.pagination = response.data.pagination;
+          // }
         });
       },
       openModal(isNew,item){ //可傳入是否為新（isNew）跟項目(item)參數 
