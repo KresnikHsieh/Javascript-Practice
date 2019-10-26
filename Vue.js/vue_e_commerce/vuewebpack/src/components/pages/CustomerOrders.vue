@@ -26,8 +26,8 @@
             <!-- 當讀取的id＝商品id時呈現讀取效果 -->
               查看更多
             </button>
-            <button type="button" class="btn btn-outline-danger btn-sm ml-auto">
-              <i class="fas fa-spinner fa-spin"></i>
+            <button type="button" @click="addtoCart(item.id)" class="btn btn-outline-danger btn-sm ml-auto">
+              <i class="fas fa-spinner fa-spin" v-if="status.loadingItem === item.id"></i>
               加到購物車
             </button>
           </div>
@@ -57,6 +57,7 @@
               <div class="h4" v-if="product.price">現在只要 {{ product.price }} 元</div>
             </div>
             <select name="" class="form-control mt-3" v-model="product.num">
+              <!-- 將選購的數量存在product.num -->
               <option :value="num" v-for="num in 10" :key="num">
                 選購 {{num}} {{product.unit}}
               </option>
@@ -75,16 +76,46 @@
         </div>
       </div>
     </div>
-
-
-
-
-
-
-
-
-
-
+  
+    <div class="my-5 row justify-content-center">
+      <div class="my-5 row justify-content-center">
+        <table class="table">
+          <thead>
+            <th></th>
+            <th>品名</th>
+            <th>數量</th>
+            <th>單價</th>
+          </thead>
+          <tbody>
+            <tr v-for="item in cart.carts" :key="item.id" v-if="cart.carts">
+              <td class="align-middle">
+                <button type="button" class="btn btn-outline-danger btn-sm">
+                  <i class="far fa-trash-alt"></i>
+                </button>
+              </td>
+              <td class="align-middle">
+                {{ item.product.title }}
+                <!-- <div class="text-success" v-if="item.coupon">
+                  已套用優惠券
+                </div> -->
+              </td>
+              <td class="align-middle">{{ item.qty }}/{{ item.product.unit }}</td>
+              <td class="align-middle text-right">{{ item.final_total }}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3" class="text-right">總計</td>
+              <td class="text-right">{{ cart.total }}</td>
+            </tr>
+            <!-- <tr v-if="cart.final_total">
+              <td colspan="3" class="text-right text-success">折扣價</td>
+              <td class="text-right text-success">{{ cart.final_total }}</td>
+            </tr> -->
+          </tfoot>
+        </table>
+      </div>
+    </div>
 
   </div>
 </template>
@@ -99,6 +130,7 @@ export default {
       status: {
         loadingItem: '', //判定畫面中何者元素正在讀取中
       },
+      cart:{},
       isLoading: false,
     };
   },
@@ -109,6 +141,7 @@ export default {
       vm.isLoading = true;
       this.$http.get(url).then((response) => {
         vm.products = response.data.products;
+        console.log("getProducts取得全部產品資訊");
         console.log(response);
         vm.isLoading = false;
       });
@@ -120,13 +153,41 @@ export default {
       this.$http.get(url).then((response) => {
         vm.product = response.data.product;
         $('#productModal').modal('show'); //打開modal
+        console.log("getProduct取得單一產品資訊");
         console.log(response);
         vm.status.loadingItem = '';//讀取完成後，將loadingItem的id設為空值
+      });
+    },
+    addtoCart(id,qty = 1){
+      const vm = this;
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
+      vm.status.loadingItem = id;
+      const cart = {
+        product_id : id,
+        qty,
+      };
+      this.$http.post(url, {data: cart} ).then((response) => {
+        $('#productModal').modal('hide'); //關閉modal
+        console.log("成功加入購物車");
+        console.log(response);
+        vm.getCart();
+        vm.status.loadingItem = '';//讀取完成後，將loadingItem的id設為空值
+      });
+    },
+    getCart(){
+      const vm = this;
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
+      vm.isLoading = true;
+      this.$http.get(url).then((response) => {
+        vm.cart = response.data.data;
+        console.log(response);
+        vm.isLoading = false;
       });
     },
   },
   created() {
     this.getProducts();
+    this.getCart();
   },
 };
 </script>
