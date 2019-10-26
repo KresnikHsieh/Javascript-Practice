@@ -123,7 +123,46 @@
       </div>
     </div>
 
-  </div>
+      <div class="my-5 row justify-content-center">
+        <form class="col-md-6" @submit.prevent="createOrder()">
+          <div class="form-group">
+            <label for="useremail">Email</label>
+            <input type="email" class="form-control" name="email" id="useremail"
+              v-model="form.user.email" placeholder="請輸入 Email" required>
+            <span class="text-danger"></span>
+          </div>
+        
+          <div class="form-group">
+            <label for="username">收件人姓名</label>
+            <input type="text" class="form-control" name="name" id="username"
+              v-model="form.user.name" placeholder="輸入姓名">
+            <span class="text-danger"></span>
+          </div>
+        
+          <div class="form-group">
+            <label for="usertel">收件人電話</label>
+            <input type="tel" class="form-control" id="usertel" v-model="form.user.tel" placeholder="請輸入電話">
+          </div>
+        
+          <div class="form-group">
+            <label for="useraddress">收件人地址</label>
+            <input type="text" class="form-control" name="address" id="useraddress" v-model="form.user.address"
+              placeholder="請輸入地址">
+            <span class="text-danger">地址欄位不得留空</span>
+          </div>
+        
+          <div class="form-group">
+            <label for="comment">留言</label>
+            <textarea name="" id="comment" class="form-control" cols="30" rows="10" v-model="form.message"></textarea>
+          </div>
+          <div class="text-right">
+            <button class="btn btn-danger">送出訂單</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  
 </template>
 
 <script>
@@ -135,6 +174,15 @@ export default {
       product: {},
       status: {
         loadingItem: '', //判定畫面中何者元素正在讀取中
+      },
+      form:{
+        user:{
+          name:'',
+          email:'',
+          tel:'',
+          address:'',
+        },
+        message:'',
       },
       cart:{},
       isLoading: false,
@@ -148,8 +196,7 @@ export default {
       vm.isLoading = true;
       this.$http.get(url).then((response) => {
         vm.products = response.data.products;
-        console.log("getProducts取得全部產品資訊");
-        console.log(response);
+        console.log("getProducts取得全部產品資訊",response);
         vm.isLoading = false;
       });
     },
@@ -160,8 +207,7 @@ export default {
       this.$http.get(url).then((response) => {
         vm.product = response.data.product;
         $('#productModal').modal('show'); //打開modal
-        console.log("getProduct取得單一產品資訊");
-        console.log(response);
+        console.log("getProduct取得單一產品資訊",response);
         vm.status.loadingItem = '';//讀取完成後，將loadingItem的id設為空值
       });
     },
@@ -175,8 +221,7 @@ export default {
       };
       this.$http.post(url, {data: cart} ).then((response) => {
         $('#productModal').modal('hide'); //關閉modal
-        console.log("成功加入購物車");
-        console.log(response);
+        console.log("成功加入購物車",response);
         vm.getCart();
         vm.status.loadingItem = '';//讀取完成後，將loadingItem的id設為空值
       });
@@ -197,8 +242,7 @@ export default {
       vm.isLoading = true;
       this.$http.delete(url).then((response) => { //使用delete行為
         vm.getCart();
-        console.log("已刪除購物車中的內容");
-        console.log(response);
+        console.log("已刪除購物車中的內容",response);
         vm.isLoading = false;
       });
     },
@@ -211,8 +255,18 @@ export default {
       vm.isLoading = true;
       this.$http.post(url, {data:coupon}).then((response) => { //使用post行為送出data
         vm.getCart();
-        console.log("已新增優惠券");
-        console.log(response);
+        console.log("已新增優惠券",response);
+        vm.isLoading = false;
+      });
+    },
+    createOrder(){
+      const vm = this;
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/order`;
+      const order = vm.form;
+      vm.isLoading = true;
+      this.$http.post(url, {data:order}).then((response) => { //使用post行為送出data
+        // vm.getCart();
+        console.log("訂單已成立",response);
         vm.isLoading = false;
       });
     },
