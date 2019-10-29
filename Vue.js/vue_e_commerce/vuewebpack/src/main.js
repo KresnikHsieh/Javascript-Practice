@@ -12,9 +12,13 @@ import router from './router';
 import 'vue-loading-overlay/dist/vue-loading.css';
 import './bus';
 import currencyFilter from './filters/currency';
+import VeeValidate from 'vee-validate';
+import zhTWValidate from 'vee-validate/dist/locale/zh_TW';
 
 Vue.config.productionTip = false;
 Vue.use(VueAxios, axios);
+Vue.use(VeeValidate);
+VeeValidate.Validator.localize('zh_TW', zhTWValidate); //載入VeeValidate的中文語系
 axios.defaults.withCredentials = true;
 
 Vue.component('Loading',Loading) //全域啟用元件Loading
