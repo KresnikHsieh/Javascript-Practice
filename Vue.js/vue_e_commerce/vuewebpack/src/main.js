@@ -12,6 +12,8 @@ import router from './router';
 import 'vue-loading-overlay/dist/vue-loading.css';
 import './bus';
 import currencyFilter from './filters/currency';
+import dateFilter from './filters/date';
+
 import VeeValidate from 'vee-validate';
 import zhTWValidate from 'vee-validate/dist/locale/zh_TW';
 
@@ -23,6 +25,7 @@ axios.defaults.withCredentials = true;
 
 Vue.component('Loading',Loading) //全域啟用元件Loading
 Vue.filter('currency', currencyFilter);
+Vue.filter('date',dateFilter);
 
 /* eslint-disable no-new */
 new Vue({

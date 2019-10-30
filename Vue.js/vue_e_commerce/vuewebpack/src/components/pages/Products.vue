@@ -61,7 +61,7 @@
           </ul>
         </nav>
 
-        <!-- <Pagination :pages="pagination" @emitPages="getProducts"></Pagination> -->
+        <Pagination :pages="pagination" @emitPages="getProducts"></Pagination>
 
         <!-- Modal -->
         <div class="modal fade" id="productModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -172,7 +172,7 @@
 
 <script>
 import $ from 'jquery'; //將jQuery的$用法載入
-// import Pagination from '../Pagination';
+import Pagination from '../Pagination';
 
 export default {
     data(){
@@ -273,6 +273,9 @@ export default {
         });
       },
     },
+    components: {
+    Pagination,
+  },
     created(){ //建立creted hook 啟動getProducts();
       this.getProducts();
       // this.$bus.$emit('message:push','這裡是訊息','success'); //將訊息方法emit出去，格式為(方法,訊息,BS樣式)

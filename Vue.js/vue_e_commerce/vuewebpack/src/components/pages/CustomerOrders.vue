@@ -285,7 +285,9 @@ export default {
         if (result) {
           this.$http.post(url, { data: order }).then((response) => {
             console.log('訂單已建立', response);
-            // vm.getCart();
+            if(response.data.success){ //當訂單資料成功傳送時
+              vm.$router.push(`/customer_checkout/${response.data.orderId}`);//跳轉至customer_checkout頁面
+            };
             vm.isLoading = false;
           });
         } else {

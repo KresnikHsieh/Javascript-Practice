@@ -4,7 +4,10 @@ import Router from 'vue-router'
 import Dashboard from '@/components/Dashboard';
 import Login from '@/components/pages/Login';
 import Products from '@/components/pages/Products';
+import Orders from '@/components/pages/Orders';
+import Coupons from '@/components/pages/Coupons';
 import CustomerOrder from '@/components/pages/CustomerOrders';
+import CustomerCheckout from '@/components/pages/CustomerCheckout';
 
 Vue.use(Router)
 
@@ -31,6 +34,19 @@ export default new Router({
           component: Products,
           meta: { requiresAuth: true },
         },
+        {
+          path: 'coupons',
+          name: 'Coupons',
+          component: Coupons,
+          meta: { requiresAuth: true },
+        },
+        {
+          path: 'orders',
+          name: 'Orders',
+          component: Orders,
+          meta: { requiresAuth: true },
+        },
+
       ],
     },
     {
@@ -48,6 +64,12 @@ export default new Router({
           name: 'CustomerOrder',
           component: CustomerOrder,
         },
+        { //建立巢狀的router-view
+          path: 'customer_checkout/:orderId',
+          name: 'CustomerCheckout',
+          component: CustomerCheckout,
+        },
+        
       ],
     },
   ]
